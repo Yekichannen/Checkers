@@ -1,8 +1,9 @@
 import asyncio
 import websockets
+import json
+import os
 
 connected_clients = []
-
 
 async def handle_client(websocket):
 
@@ -10,13 +11,27 @@ async def handle_client(websocket):
 
     print("Connected:", len(connected_clients))
 
+    # start game ONLY when 2 players connected
+    if len(connected_clients) == 2:
+
+        await connected_clients[0].send(
+            json.dumps({
+                "Action": "StartGame",
+                "Turn": 0
+            })
+        )
+
+        await connected_clients[1].send(
+            json.dumps({
+                "Action": "StartGame",
+                "Turn": 1
+            })
+        )
+
     try:
 
         async for message in websocket:
 
-            print("Received:", message)
-
-            # send to all OTHER players
             for client in connected_clients:
 
                 if client != websocket:
@@ -40,14 +55,12 @@ async def handle_client(websocket):
 async def main():
 
     async with websockets.serve(
-        handle_client,
-        "localhost",
-        8765
+    handle_client,
+    "0.0.0.0",
+    int(os.environ.get("PORT", 10000))
     ):
 
-        print(
-            "Server running on ws://localhost:8765"
-        )
+        print("Server running")
 
         await asyncio.Future()
 
