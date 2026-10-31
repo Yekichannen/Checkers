@@ -6,7 +6,7 @@ import asyncpg  # database (Supabase)
 
 # Paste your Supabase connection string here.
 # Keep this file private because the connection string contains a password.
-databaseUrl = "JustDoodleYekiChannen!"
+databaseUrl = "postgresql://postgres.txbsllyawyvxqruaunul:JustDoodleYekiChannen!@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
 pool = None
 
 # A room holds the sockets for two players.
